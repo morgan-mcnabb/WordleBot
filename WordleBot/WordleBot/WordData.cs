@@ -5,8 +5,6 @@ namespace WordleBot
 {
     public class WordData
     {
-        const int LENGTH_OF_WORD = 5;
-
         public string Word { get; set;}
 
         // lower the better
@@ -14,6 +12,8 @@ namespace WordleBot
 
         // lower the better
         public int IndexScore { get; set; } = 0;
+
+        public double Weight { get; set;} = 0;
 
         public WordData(string word)
         {
@@ -27,7 +27,7 @@ namespace WordleBot
             
             // for calculating index score
             Dictionary<int, char> mostCommonLettersByIndex = new();
-            for (int i = 0; i < LENGTH_OF_WORD; i++)
+            for (int i = 0; i < Word.Length; i++)
             {
                 var highestFreqByIndex = characterData.Where(x => x.MostFrequentIndex == i).OrderByDescending(x => x.HighestFrequency).First();
                 mostCommonLettersByIndex[i] = highestFreqByIndex.Character;
@@ -41,6 +41,5 @@ namespace WordleBot
                     IndexScore++;
             }
         }
-       
     }
 }

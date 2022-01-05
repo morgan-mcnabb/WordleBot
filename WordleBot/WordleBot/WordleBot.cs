@@ -44,11 +44,16 @@ namespace WordleBot
 #endif
         private void BuildWordData(List<IndexFrequency> characterFrequencies)
         {
-            var words = File.ReadAllLines("words.txt").ToList();
-            for (int i = 0; i < words.Count; i++)
+            var data = File.ReadAllLines("words2.txt").ToArray();
+            WordData wordData;
+            foreach(var d in data)
             {
-                _wordData.Add(new WordData(words[i]));
-                _wordData[i].SetFrequencyAndIndexScores(characterFrequencies);
+                string[] parsedData = d.Split(":");
+                wordData = new WordData(parsedData[0]);
+                wordData.FrequencyScore = int.Parse(parsedData[1]);
+                wordData.IndexScore = int.Parse(parsedData[2]);
+                wordData.Weight = double.Parse(parsedData[3]);
+                _wordData.Add(wordData);
             }
         }
         public string GetGuess(int currentGuesses)
@@ -76,7 +81,8 @@ namespace WordleBot
                     potentialGuesses.Add(wordData);
             }
 
-            return potentialGuesses.OrderByDescending(x => x.IndexScore).First().Word.ToLower();
+            return potentialGuesses.OrderByDescending(x => x.Weight).ThenByDescending(x => x.IndexScore).First().Word.ToLower();
+            //return potentialGuesses.OrderByDescending(x => x.IndexScore).First().Word.ToLower();
         }
 
         public GuessResult FindWordByGuessing()
